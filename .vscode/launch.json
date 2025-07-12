@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "main",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/output/mainFile.exe", // Caminho do executável gerado
+            "args": [], // Argumentos para o programa, se necessário
+            "stopAtEntry": false, // Não parar na entrada do programa
+            "cwd": "${workspaceFolder}", // Diretório de trabalho
+            "environment": [],
+            "externalConsole": true, // Usar console externo para entrada/saída
+            "MIMode": "gdb", // Usar GDB como depurador
+            "miDebuggerPath": "C:\\msys64\\ucrt64\\bin\\gdb.exe", // Caminho para o GDB
+            "setupCommands": [
+                {
+                    "description": "Habilitar impressão de valores para GDB",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "C/C++: gcc.exe build mainFile" // Nome da task definida no tasks.json
+        }
+    ]
+}
