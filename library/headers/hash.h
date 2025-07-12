@@ -4,10 +4,10 @@
 
 int h(long int cpf);
 
-int* hash_allocate();
+TS** hash_allocate();
 
-TS* hash_search(TS** h,long int cpf);
+TS* hash_search(char* file_name, long int cpf);
 
-void hash_insert(TS** h, TS* student);
+void hash_insert(char* file_name, TS* student);
 
-void hash_remove(TS** h, long int cpf);
+void hash_remove(char* file_name, long int cpf);

@@ -6,13 +6,13 @@
 void main(){
     SetConsoleOutputCP(CP_UTF8);
 
-    FILE *fp_name = fopen("data/name.bin", "wb");
+    FILE *fp_name = fopen("data/name.bin", "r+b");
     if (!fp_name) {
         printf("Erro ao abrir arquivo");
         return;
     }
 
-    FILE *fp_cpf = fopen("data/cpf.bin", "wb");
+    FILE *fp_cpf = fopen("data/cpf.bin", "r+b");
     if (!fp_cpf) {
         printf("Erro ao abrir arquivo");
         fclose(fp_name);
