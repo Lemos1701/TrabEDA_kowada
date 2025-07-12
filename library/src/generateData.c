@@ -66,21 +66,41 @@ const char* lastname[100] = {
     "Torres", "Teles", "Paranhos", "Valadão"
 };
 
-void generate_func(FILE *file, const char** fp, const char** sp) {
+void generate_func(char *file_name, const char** fp, const char** sp) {
+    FILE *file = fopen(file_name, "wb");
+    if (!file) {
+        printf("Erro ao abrir o arquivo para escrita.\n");
+        return;
+    }
+
     for(int i = 0; i < 100; i++){
         for(int j = 0; j < 100; j++){
             char fullName[50];
-            int num;
+            long long int num;
             if(isalpha(*fp[0]) == 1){
                 snprintf(fullName, sizeof(fullName), "%s %s", fp[i], sp[j]);
-                fwrite(fullName, sizeof(char), strlen(fullName) + 1, file);
+                fwrite(fullName, sizeof(char), 50, file);
             }
             else{
                 snprintf(fullName, sizeof(fullName), "%s%s", fp[i], sp[j]);
-                num = atoi(fullName);
-                fwrite(&num, sizeof(int), 1, file);
+                num = atoll(fullName);
+                fwrite(&num, sizeof(long long int), 1, file);
             }
         }
     }
+    fclose(file);
 }
 
+void generate_score(char *file_name) {
+    FILE *file = fopen(file_name, "w+b");
+    if (!file) {
+        printf("Erro ao abrir o arquivo para escrita.\n");
+        return;
+    }
+
+    for(int i = 0; i < 10000; i++){
+        int score = rand() % 101;
+        fwrite(&score, sizeof(int), 1, file);
+    }
+    fclose(file);
+}

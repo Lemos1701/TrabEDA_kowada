@@ -14,4 +14,6 @@ extern const char* lastname[100];
 
 #endif
 
-void generate_func(FILE *file, const char** fp, const char** sp);
+void generate_func(char *file_name, const char** fp, const char** sp);
+
+void generate_score(char *file_name);

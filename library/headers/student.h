@@ -1,10 +1,13 @@
+#include <stdlib.h>
+#include <stdio.h>
+
 #ifndef STUDENT_H
 #define STUDENT_H
 
 typedef struct student{
-    long int cpf;
+    long long int cpf;
     int score;
-    char name[50];//preciso mallocar pra 
+    char name[50];
 }TS;
 
 #endif
