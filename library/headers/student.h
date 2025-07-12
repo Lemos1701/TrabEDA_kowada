@@ -8,3 +8,5 @@ typedef struct student{
 }TS;
 
 #endif
+
+TS* student_allocate();

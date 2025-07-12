@@ -70,10 +70,16 @@ void generate_func(FILE *file, const char** fp, const char** sp) {
     for(int i = 0; i < 100; i++){
         for(int j = 0; j < 100; j++){
             char fullName[50];
-            if(isalpha(*fp[0]) == 1) snprintf(fullName, sizeof(fullName), "%s %s", fp[i], sp[j]);
-            else snprintf(fullName, sizeof(fullName), "%s%s", fp[i], sp[j]);
-            
-            fwrite(fullName, sizeof(char), strlen(fullName) + 1, file);
+            int num;
+            if(isalpha(*fp[0]) == 1){
+                snprintf(fullName, sizeof(fullName), "%s %s", fp[i], sp[j]);
+                fwrite(fullName, sizeof(char), strlen(fullName) + 1, file);
+            }
+            else{
+                snprintf(fullName, sizeof(fullName), "%s%s", fp[i], sp[j]);
+                num = atoi(fullName);
+                fwrite(&num, sizeof(int), 1, file);
+            }
         }
     }
 }
