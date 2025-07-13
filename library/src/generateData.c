@@ -66,41 +66,27 @@ const char* lastname[100] = {
     "Torres", "Teles", "Paranhos", "Valadão"
 };
 
-void generate_func(char *file_name, const char** fp, const char** sp) {
-    FILE *file = fopen(file_name, "wb");
+void generate_func(FILE* file, const char** name_fp, const char** name_sp, const char** cpf_fp, const char**cpf_sp) {
     if (!file) {
         printf("Erro ao abrir o arquivo para escrita.\n");
         return;
     }
+    rewind(file);
+
+    TS student;
 
     for(int i = 0; i < 100; i++){
         for(int j = 0; j < 100; j++){
-            char fullName[50];
-            long long int num;
-            if(isalpha(*fp[0]) == 1){
-                snprintf(fullName, sizeof(fullName), "%s %s", fp[i], sp[j]);
-                fwrite(fullName, sizeof(char), 50, file);
-            }
-            else{
-                snprintf(fullName, sizeof(fullName), "%s%s", fp[i], sp[j]);
-                num = atoll(fullName);
-                fwrite(&num, sizeof(long long int), 1, file);
-            }
+            snprintf(student.name, sizeof(char) * 50, "%s %s", name_fp[i], name_sp[j]);
+            
+            char aux_cpf[15];
+            snprintf(aux_cpf, sizeof(aux_cpf), "%s%s", cpf_fp[i], cpf_sp[j]);
+            student.cpf = atoll(aux_cpf);
+            
+            student.score = rand() % 101;
+            fwrite(&student, sizeof(TS), 1, file);
+            
+            
         }
     }
-    fclose(file);
-}
-
-void generate_score(char *file_name) {
-    FILE *file = fopen(file_name, "w+b");
-    if (!file) {
-        printf("Erro ao abrir o arquivo para escrita.\n");
-        return;
-    }
-
-    for(int i = 0; i < 10000; i++){
-        int score = rand() % 101;
-        fwrite(&score, sizeof(int), 1, file);
-    }
-    fclose(file);
 }

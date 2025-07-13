@@ -6,10 +6,12 @@ int h();
 
 TS** hash_allocate();
 
-int hash_search(char* file_name, long long int cpf);
+int hash_search(FILE* file, long long int cpf);
 
-void hash_insert(char* file_name, TS* student);
+void hash_insert(FILE* file, TS student);
 
-void hash_remove(char* file_name, long long int cpf);
+void hash_remove(FILE* file, long long int cpf);
 
-void hash_build(char* file_name, char* name_file, char* cpf_file, char* score_file);
+void prepare_hash_file(FILE* file);
+
+void hash_build(FILE* file_hash, FILE* file_student);

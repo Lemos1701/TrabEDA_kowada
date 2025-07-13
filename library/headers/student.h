@@ -12,4 +12,4 @@ typedef struct student{
 
 #endif
 
-TS* student_allocate();
+TS student_init();

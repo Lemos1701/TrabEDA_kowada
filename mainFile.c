@@ -2,51 +2,68 @@
 #include <stdlib.h>
 #include <windows.h>
 #include "generateData.h"
+#include "hash.h"
 
-void lerCPFs(const char *nome_arquivo) {
-    FILE *file = fopen(nome_arquivo, "rb");
+void lerStudents(FILE* file) {
     if (!file) {
-        printf("Erro ao abrir arquivo.\n");
+        printf("Erro ao abrir o arquivo de estudantes.\n");
         return;
     }
+    rewind(file);
 
-    int cpf;
-
-    while (fread(&cpf, sizeof(int), 1, file) == 1) {
-        printf("CPF: %d\n", cpf);
+    TS student;
+    while (fread(&student, sizeof(TS), 1, file)) {
+        if (student.cpf != -1) { // Verifica se o cpf é válido
+            printf("Nome: %s, CPF: %lld, Nota: %d\n", student.name, student.cpf, student.score);
+        }
     }
-
-    fclose(file);
 }
 
 void main(){
     SetConsoleOutputCP(CP_UTF8);
+
+    FILE *file_hash = fopen("data/hash.bin", "rb+");
+    if (!file_hash) {
+        printf("Erro na criação. Não foi possível abrir o arquivo da hash.\n");
+        return;
+    }
+
+    FILE *file_student = fopen("data/student.bin", "rb+");
+    if (!file_student) {
+        printf("Erro na criação. Não foi possível abrir o arquivo dos nomes.\n");
+        fclose(file_hash);
+        return;
+    }
     
     //menu:
     int opt = 0;
     printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
     
     printf("Escolha uma das opções:\n");
-    printf("1- Criar nomes.\n2- Criar cpfs.\n3- Criar notas.\n4- Ler cpfs.\n5- Ler notas.\n6- sair.\n");
+    printf("1- Criar hash.\n2- Ler estudantes.\n3- sair.\n\n");
     scanf("%d", &opt);
+    while(opt != 3){
+        if(opt == 1){
+            generate_func(file_student, firstname, lastname, cpf_p1, cpf_p2);
+            prepare_hash_file(file_hash);
+            hash_build(file_hash, file_student);
+            printf("Hash criada com sucesso!\n");
+            printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
+        } else if(opt == 2) {
+            lerStudents(file_student);
+            printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
+        } else if(opt < 1 || opt > 3) {
+            printf("Opção inválida. Tente novamente:\n");
+            printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
+        }
 
-    if(opt == 1) generate_func("data/name.bin", firstname, lastname);
-    else if(opt == 2) generate_func("data/cpf.bin", cpf_p1, cpf_p2);
-    else if(opt == 3) generate_score("data/score.bin");
-    else if(opt == 4) {
-        lerCPFs("data/cpf.bin");
-        return;
-    }
-    else if (opt == 5) {
-        // Chamar a função para ler notas
-    }
+        printf("Escolha uma das opções:\n");
+        printf("1- Criar hash.\n2- Ler estudantes.\n3- sair.\n\n");
 
-    else if (opt == 6) return;
-
-    while (opt < 1 || opt > 6){
-        printf("Opção inválida. Tente novamente:\n");
         scanf("%d", &opt);
+        printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
     }
 
-    printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
+    fclose(file_hash);
+    fclose(file_student);
 }

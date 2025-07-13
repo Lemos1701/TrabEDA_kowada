@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "student.h"
 
 
 #ifndef GENERATEDATA_H
@@ -14,6 +15,4 @@ extern const char* lastname[100];
 
 #endif
 
-void generate_func(char *file_name, const char** fp, const char** sp);
-
-void generate_score(char *file_name);
+void generate_func(FILE* file, const char** name_fp, const char** name_sp, const char** cpf_fp, const char**cpf_sp);

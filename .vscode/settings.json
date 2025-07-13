@@ -3,6 +3,7 @@
         "stdio.h": "c",
         "hash.h": "c",
         "student.h": "c",
-        "ctype.h": "c"
+        "ctype.h": "c",
+        "stdlib.h": "c"
     }
 }

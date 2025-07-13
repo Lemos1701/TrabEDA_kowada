@@ -1,138 +1,121 @@
 #include "hash.h"
 
-int h(){
-    return rand() % 100000;
+#define hash_size 100000
+#define student_size 10000
+
+int h(long long int cpf, int k){
+    srand(cpf/100);
+    return (rand() % hash_size + k) % hash_size;
 }
 
-int hash_search(char* file_name, long long int cpf){
-    FILE *file = fopen(file_name, "rb");
+int hash_search(FILE* file, long long int cpf){
     if (!file) {
         printf("Erro na busca. Não foi possível abrir o arquivo.\n");
         return -1;
     }
+    rewind(file);
 
-    srand(cpf/100);
-    int position = h();
-    int attempt = 1;
+    int attempt = 0;
+    int position = h(cpf, attempt);
 
     fseek(file, (sizeof(TS) * position), SEEK_SET);
 
-    TS* target = NULL;
-    fread(target, sizeof(TS), 1, file);
+    TS target = student_init();
+    fread(&target, sizeof(TS), 1, file);
 
-    while (target->cpf != cpf && attempt < 100000){
-        position = h();
-        fseek(file, (sizeof(TS) * position), SEEK_SET);
-        fread(target, sizeof(TS), 1, file);
+    while (target.cpf != cpf && attempt < hash_size){
         attempt++;
+        position = h(cpf, attempt);
+        fseek(file, (sizeof(TS) * position), SEEK_SET);
+        fread(&target, sizeof(TS), 1, file);
     }
 
-    fclose(file);
-    if(target->cpf == cpf){
-        fclose(file);
-        return position;
-    }
+    if(target.cpf == cpf) return position;
     return -1;
 }
 
-void hash_insert(char *file_name, TS* student){
-    FILE *file = fopen(file_name, "r+b");
+void hash_insert(FILE* file, TS student){
     if (!file) {
         printf("Erro na inserção. Não foi possível abrir o arquivo.\n");
         return;
     }
+    rewind(file);
 
-    srand(student->cpf/100);
-    int position = h();
+    int attempt = 0;
+    int position = 0;
     
-    fseek(file, (sizeof(TS) * position), SEEK_SET);
+    TS is_ocu;
     
-    TS* is_ocu = NULL;
-    fread(is_ocu, sizeof(TS), 1, file);
-
-    int attempt = 1;
-    
-    while (is_ocu->cpf != -1 && attempt < 100000) {
-        position = h();
+    while (attempt < hash_size) {
+        position = h(student.cpf, attempt);
         fseek(file, (sizeof(TS) * position), SEEK_SET);
-        fread(is_ocu, sizeof(TS), 1, file);
+        fread(&is_ocu, sizeof(TS), 1, file);
+        if(is_ocu.cpf == -1){
+            fseek(file, (sizeof(TS) * position), SEEK_SET);
+            fwrite(&student, sizeof(TS), 1, file);
+            printf("%s foi inserido com %d colisões.\n", student.name, attempt);
+            break;
+        }
+        if(is_ocu.cpf == student.cpf) break;
         attempt++;
     }
-    
-    fseek(file, (sizeof(TS) * position), SEEK_SET);
-    if(attempt < 100000) fwrite(student, sizeof(TS), 1, file);
-
-    fclose(file);
 }
 
-void hash_remove(char* file_name, long long int cpf){
-    FILE *file = fopen(file_name, "r+b");
+void hash_remove(FILE* file, long long int cpf){
     if (!file) {
-        printf("Erro na remoção. Não foi possível abrir o arquivo.\n");
+        printf("Erro na remoção. Arquivo inválido.\n");
         return;
     }
-
-    int position = hash_search(file_name, cpf);
+    rewind(file);
+    
+    int position = hash_search(file, cpf);
     if(position == -1){
         printf("Erro na remoção. Não foi possível encontrar o aluno.\n");
         return;
     }
     fseek(file, (sizeof(TS) * position), SEEK_SET);
-
-    TS* target = NULL;
-    fread(target, sizeof(TS), 1, file);
-
-    target->cpf = -1; //o cpf ser -1 no meu código é quem vai dizer se tem ou não alguem ali, é minha flag
-
+    
+    TS target = student_init();
+    fread(&target, sizeof(TS), 1, file);
+    
+    target.cpf = -1; //o cpf ser -1 no meu código é quem vai dizer se tem ou não alguem ali, é minha flag
+    
     fseek(file, (sizeof(TS) * position), SEEK_SET);
-    fwrite(target, sizeof(TS), 1, file);
-
-    fclose(file);
+    fwrite(&target, sizeof(TS), 1, file);
 }
 
-void hash_build(char* file_name, char* name_file, char* cpf_file, char* score_file){
-    FILE *hash_file = fopen(file_name, "r+b");
-    if (!hash_file) {
-        printf("Erro na criação. Não foi possível abrir o arquivo da hash.\n");
+void prepare_hash_file(FILE* file){
+    if (!file) {
+        printf("Erro na preparação. Arquivo inválido.\n");
         return;
     }
+    rewind(file);
 
-    FILE *name = fopen(name_file, "r+b");
-    if (!name) {
-        printf("Erro na criação. Não foi possível abrir o arquivo dos nomes.\n");
-        fclose(hash_file);
+    TS student = student_init();
+    for(int i = 0; i < hash_size; i++){
+        fwrite(&student, sizeof(TS), 1, file);
+    }
+}
+
+void hash_build(FILE* file_hash, FILE* file_student){
+    if (!file_hash) {
+        printf("Erro na criação. Arquivo da hash inválido.\n");
         return;
     }
-
-    FILE *cpf = fopen(cpf_file, "r+b");
-    if (!cpf) {
-        printf("Erro na criação. Não foi possível abrir o arquivo dos cpfs.\n");
-        fclose(hash_file);
-        fclose(name);
+    if (!file_student) {
+        printf("Erro na criação. Arquivo dos nomes inválido.\n");
+        fclose(file_hash);
         return;
     }
+    rewind(file_hash);
+    rewind(file_student);
 
-    FILE *score = fopen(score_file, "r+b");
-    if (!score) {
-        printf("Erro na criação. Não foi possível abrir o arquivo das notas.\n");
-        fclose(hash_file);
-        fclose(name);
-        fclose(cpf);
-        return;
+
+    TS student = student_init();
+
+    for(int i = 0; i < student_size; i++){
+        fread(&student, sizeof(TS), 1, file_student);
+
+        hash_insert(file_hash, student);
     }
-
-    TS* student = student_allocate();
-
-    for(int i = 0; i < 10000; i++){
-        fread(student->name, sizeof(char), 50, name);
-        fread(&student->cpf, sizeof(long long int), 1, cpf);
-        fread(&student->score, sizeof(int), 1, score);
-
-        hash_insert(file_name, student);
-    }
-
-    fclose(hash_file);
-    fclose(name);
-    fclose(cpf);
-    fclose(score);
 }
