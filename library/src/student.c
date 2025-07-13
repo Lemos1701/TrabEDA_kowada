@@ -7,3 +7,14 @@ TS student_init(){
     
     return student;
 }
+
+TS new_student(char *name, int score, long long int cpf){
+    TS student;
+    
+    memset(student.name, 0, 50);
+    strncpy(student.name, "Vitor Lemos", 49);
+    student.cpf = cpf;
+    student.score = score;
+    
+    return student;
+}

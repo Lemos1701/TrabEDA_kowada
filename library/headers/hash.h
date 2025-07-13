@@ -8,7 +8,7 @@ TS** hash_allocate();
 
 int hash_search(FILE* file, long long int cpf);
 
-void hash_insert(FILE* file, TS student);
+int hash_insert(FILE* file, TS student, int *num_elem);
 
 void hash_remove(FILE* file, long long int cpf);
 

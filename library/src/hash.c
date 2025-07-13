@@ -31,13 +31,15 @@ int hash_search(FILE* file, long long int cpf){
     }
 
     if(target.cpf == cpf) return position;
+    printf("Erro na busca. Estudante inexistente.\n");
     return -1;
 }
 
-void hash_insert(FILE* file, TS student){
+int hash_insert(FILE* file, TS student, int *num_elem){
     if (!file) {
         printf("Erro na inserção. Não foi possível abrir o arquivo.\n");
-        return;
+        *num_elem--;
+        return -1;
     }
     rewind(file);
 
@@ -51,12 +53,15 @@ void hash_insert(FILE* file, TS student){
         fseek(file, (sizeof(TS) * position), SEEK_SET);
         fread(&is_ocu, sizeof(TS), 1, file);
         if(is_ocu.cpf == -1){
+            if(is_ocu.cpf == student.cpf){
+                printf("Erro na inserção. Aluno ja inserido.\n");
+                *num_elem--;
+                break;
+            }
             fseek(file, (sizeof(TS) * position), SEEK_SET);
             fwrite(&student, sizeof(TS), 1, file);
-            printf("%s foi inserido com %d colisões.\n", student.name, attempt);
-            break;
+            return attempt;
         }
-        if(is_ocu.cpf == student.cpf) break;
         attempt++;
     }
 }
@@ -76,12 +81,9 @@ void hash_remove(FILE* file, long long int cpf){
     fseek(file, (sizeof(TS) * position), SEEK_SET);
     
     TS target = student_init();
-    fread(&target, sizeof(TS), 1, file);
-    
-    target.cpf = -1; //o cpf ser -1 no meu código é quem vai dizer se tem ou não alguem ali, é minha flag
-    
-    fseek(file, (sizeof(TS) * position), SEEK_SET);
+
     fwrite(&target, sizeof(TS), 1, file);
+    printf("Estudante removido com sucesso.\n");
 }
 
 void prepare_hash_file(FILE* file){
@@ -109,13 +111,17 @@ void hash_build(FILE* file_hash, FILE* file_student){
     }
     rewind(file_hash);
     rewind(file_student);
-
+    
+    int total_colision = 0;
+    int number_of_students = 0;
 
     TS student = student_init();
 
     for(int i = 0; i < student_size; i++){
         fread(&student, sizeof(TS), 1, file_student);
-
-        hash_insert(file_hash, student);
+        total_colision += hash_insert(file_hash, student, &(number_of_students));
+        number_of_students++;
     }
+
+    printf("\n%d alunos foram inseridos com um total de %d colisões!\n", number_of_students, total_colision);
 }

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 
 #ifndef STUDENT_H
@@ -13,3 +14,5 @@ typedef struct student{
 #endif
 
 TS student_init();
+
+TS new_student(char *name, int score, long long int cpf);
