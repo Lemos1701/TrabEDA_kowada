@@ -28,7 +28,7 @@ void main(){
     int opt = 0;
     while(opt != 3){
         printf("Escolha uma das opções:\n");
-        printf("1- Testar Hash.\n2- Testar Heap.\n3- sair.\n\n");
+        printf("1- Testar Hash.\n2- Testar Heap.\n3- Testar B+.\n4- sair.\n\n");
         printf("Escolha: ");
         scanf("%d", &opt);
         if(opt == 1){
@@ -37,12 +37,14 @@ void main(){
         } else if(opt == 2){
             printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");
             heap_menu(file_heap, file_student);
-        } else if(opt < 1 || opt > 3) {
+        } else if(opt == 3){
+            printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");
+            bplus_menu(file_student);
+        } else if(opt < 1 || opt > 4) {
             printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");
             printf("Opção inválida. Tente novamente:\n");
         }
     }
-
     fclose(file_hash);
     fclose(file_heap);
     fclose(file_student);

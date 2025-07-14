@@ -157,3 +157,26 @@ void heap_menu(FILE* file_heap, FILE* file_student) {
         printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");
     }
 }
+
+void bplus_menu(FILE* file_student){
+    int opt = 0;
+    while(opt != 2){
+        printf("Escolha uma das opções:\n");
+        printf("1- Iniciar o teste da B+.\n2- Sair.\n\n");
+        printf("Escolha: ");
+        scanf("%d", &opt);
+
+        if(opt == 1){
+            printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");
+            printf("Construindo a árvore:\n");
+            testing_btree(file_student); 
+            printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");
+            printf("Buscando meus elementos na arvore:\n");
+        } else if(opt < 1 || opt >2) {
+            printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");
+            printf("Opção inválida. Tente novamente:\n");
+            printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");
+        }
+        printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");
+    }
+}
