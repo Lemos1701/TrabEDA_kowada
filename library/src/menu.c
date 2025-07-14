@@ -7,7 +7,7 @@ void fix_name(char *str) {
     }
 }
 
-void hash_menu(FILE* file_hash ,FILE* file_student) {
+void hash_menu(FILE* file_hash, FILE* file_student) {
     int opt = 0;
     while(opt != 5){
         printf("Escolha uma das opções:\n");
@@ -82,7 +82,7 @@ void hash_menu(FILE* file_hash ,FILE* file_student) {
     }
 }
 
-void heap_menu(FILE* file_heap ,FILE* file_student) {
+void heap_menu(FILE* file_heap, FILE* file_student) {
     int opt = 0;
     int n = 0;
     while(opt != 5){
@@ -128,7 +128,6 @@ void heap_menu(FILE* file_heap ,FILE* file_student) {
             heap_remove(file_heap, &n);
 
             heap_verify(file_heap);
-            //heap_remove(file_heap, cpf);
 
         } else if(opt == 4){
             printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");

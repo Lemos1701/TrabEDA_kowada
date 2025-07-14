@@ -21,26 +21,21 @@ void rise(FILE* file, int position, int heap_size) {
         return;
     }
 
-    if (position <= 0) return; // Já é a raiz
+    if (position <= 0) return;
 
     int father_position = father_f(position);
     TS son, father;
 
-    // Lê o filho
     fseek(file, sizeof(TS) * position, SEEK_SET);
     fread(&son, sizeof(TS), 1, file);
 
-    // Lê o pai
     fseek(file, father_position * sizeof(TS), SEEK_SET);
     fread(&father, sizeof(TS), 1, file);
 
-    // Se a nota do filho for maior, troca com o pai e continua subindo
     if (son.score >= father.score) {
-        // Escreve o filho na posição do pai
         fseek(file, father_position * sizeof(TS), SEEK_SET);
         fwrite(&son, sizeof(TS), 1, file);
 
-        // Escreve o pai na posição do filho
         fseek(file, position * sizeof(TS), SEEK_SET);
         fwrite(&father, sizeof(TS), 1, file);
 
@@ -136,29 +131,29 @@ void heap_insert(FILE* file, TS student){
 }
 
 void heap_remove(FILE* file, int* heap_size) {
-    if (!file || *heap_size == 0) {
-        printf("Heap vazia ou arquivo inválido.\n");
+    if (!file) {
+        printf("Erro na remoção. Não foi possível abrir o arquivo.\n");
+        return;
+    }
+
+    if (*heap_size == 0) {
+        printf("Erro na remoção. Heap vazia.\n");
         return;
     }
 
     TS ultimo, raiz;
 
-    // Ler o último elemento
     fseek(file, sizeof(TS) * (*heap_size - 1), SEEK_SET);
     fread(&ultimo, sizeof(TS), 1, file);
 
-    // Ler a raiz
     fseek(file, 0, SEEK_SET);
     fread(&raiz, sizeof(TS), 1, file);
 
-    // Colocar o último elemento na raiz
     fseek(file, 0, SEEK_SET);
     fwrite(&ultimo, sizeof(TS), 1, file);
 
-    // Diminuir o tamanho da heap
     (*heap_size)--;
 
-    // Reorganizar a heap para baixo
     descend(file, 0, *heap_size);
 
     printf("Removido: %s (Score: %d)\n", raiz.name, raiz.score);
@@ -201,7 +196,7 @@ void heap_verify(FILE *file) {
             }
         }
     }
-    printf("Elementos inseridos na estrutura correta da heap.\n");
+    printf("Estrutura correta da heap.\n");
     return;
 }
 
@@ -219,7 +214,6 @@ void heap_build(FILE* file_heap, FILE* file_student){
     rewind(file_student);
 
     TS student;
-    int n = 0;
 
     for(int i = 0; i < student_size; i++){
         fread(&student, sizeof(TS), 1, file_student);
