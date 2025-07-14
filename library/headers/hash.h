@@ -4,8 +4,6 @@
 
 int h();
 
-TS** hash_allocate();
-
 int hash_search(FILE* file, long long int cpf);
 
 int hash_insert(FILE* file, TS student, int *num_elem);

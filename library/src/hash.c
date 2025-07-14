@@ -106,9 +106,9 @@ void hash_build(FILE* file_hash, FILE* file_student){
     }
     if (!file_student) {
         printf("Erro na criação. Arquivo dos nomes inválido.\n");
-        fclose(file_hash);
         return;
     }
+    
     rewind(file_hash);
     rewind(file_student);
     
@@ -116,12 +116,21 @@ void hash_build(FILE* file_hash, FILE* file_student){
     int number_of_students = 0;
 
     TS student = student_init();
+    long long int vector[10000];
+    int verify = 0;
 
     for(int i = 0; i < student_size; i++){
         fread(&student, sizeof(TS), 1, file_student);
+        vector[i] = student.cpf;
         total_colision += hash_insert(file_hash, student, &(number_of_students));
         number_of_students++;
     }
 
-    printf("\n%d alunos foram inseridos com um total de %d colisões!\n", number_of_students, total_colision);
+    for(int i = 0; i < student_size; i++){
+        if(hash_search(file_hash, vector[i]) != -1){
+            verify++;
+        }
+    }
+
+    printf("\n%d alunos foram inseridos com um total de %d colisões!\n", verify, total_colision);
 }
