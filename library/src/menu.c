@@ -160,6 +160,7 @@ void heap_menu(FILE* file_heap, FILE* file_student) {
 
 void bplus_menu(FILE* file_student){
     int opt = 0;
+    create_bplus_file("data/index_btree.bin", "data/leaf_btree.bin");
     while(opt != 2){
         printf("Escolha uma das opções:\n");
         printf("1- Iniciar o teste da B+.\n2- Sair.\n\n");
@@ -167,6 +168,7 @@ void bplus_menu(FILE* file_student){
         scanf("%d", &opt);
 
         if(opt == 1){
+            generate_func(file_student, firstname, lastname, cpf_p1, cpf_p2);
             printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");
             printf("Construindo a árvore:\n");
             testing_btree(file_student); 

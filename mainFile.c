@@ -1,4 +1,4 @@
-#include "menu.h"
+#include "library/headers/menu.h"
 
 void main(){
     SetConsoleOutputCP(CP_UTF8);
@@ -26,7 +26,7 @@ void main(){
     
     //menu:
     int opt = 0;
-    while(opt != 3){
+    while(opt != 4){
         printf("Escolha uma das opções:\n");
         printf("1- Testar Hash.\n2- Testar Heap.\n3- Testar B+.\n4- sair.\n\n");
         printf("Escolha: ");
@@ -40,6 +40,8 @@ void main(){
         } else if(opt == 3){
             printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");
             bplus_menu(file_student);
+        } else if (opt == 4) {
+            break;
         } else if(opt < 1 || opt > 4) {
             printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n\n");
             printf("Opção inválida. Tente novamente:\n");

@@ -27,13 +27,13 @@ typedef struct bplus_tree{
 
 btree_node create_node();
 
-void read_node(const char* index_btree, long long int position, btree_node node);
+void read_node(const char* index_btree, long long int position, btree_node* node);
 
 long long int btree_insert(long long int root_position, TS data, const char* idx_file, const char* data_file);
 
-void recursive_insert(btree_node node, TS data, const char* idx_file, const char* data_file);
+void recursive_insert(btree_node* node, TS data, const char* idx_file, const char* data_file);
 
-void split(btree_node parent, int child_index, btree_node child, const char* idx_file);
+void split(btree_node* parent, int child_index, btree_node* child, const char* idx_file);
 
 void write_node(const char* idx_file, btree_node node);
 
@@ -45,8 +45,10 @@ void balance_after_removal(long long int node_position, const char* idx_file);
 
 void remove_parent_pointer(btree_node parent, int removed_child_index, const char* idx_file);
 
-int remove_key_from_node(btree_node node, long long int cpf);
+int remove_key_from_node(btree_node* node, long long int cpf);
 
 void search_and_print(long long int root_position, long long int target_cpf, const char* idx_file, const char* data_file);
 
 void testing_btree(FILE *file_student);
+
+void create_bplus_file(char *file_index, char* file_leaf);
