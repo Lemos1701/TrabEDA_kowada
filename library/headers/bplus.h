@@ -15,12 +15,12 @@
 typedef struct bplus_tree{
     int is_leaf;//bool
     int num_keys;//numero de chaves
-    long long int parent_pointer;//posição do pae
+    long long int parent_pointer;//posição do pai
     long long int keys[2 * d];//cpfs
     long long int children[2 * d + 1];//endereço de cada filho
     long long int position;//endereço atual
     long long int records[2 * d];//endereço de todos os elementos presentes no meu nó
-    long long int next_node;//posição do proxino
+    long long int next_node;//posição do proximo
 } btree_node;
 
 #endif
